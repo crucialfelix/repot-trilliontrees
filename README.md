@@ -389,6 +389,53 @@ https://docs.expo.io/versions/v37.0.0/distribution/publishing-websites/
 https://dev.to/evanbacon/next-js-expo-and-react-native-for-web-3kd9
 https://necolas.github.io/react-native-web/docs/?path=/docs/guides-multi-platform--page
 
+## Deployment
+
+`npm run build`
+
+Granted, the app is pretty bare right now, but still the pages are realy small and optimized:
+
+```
+Page                                                           Size     First Load JS
+┌ ○ /                                                          636 B          89.9 kB
+├   /_app                                                      4.13 kB        89.3 kB
+├ ○ /404                                                       3.15 kB        92.4 kB
+├ ○ /about                                                     3.77 kB        93.1 kB
+├ ○ /authorize                                                 315 B          89.6 kB
+├ ○ /challenge                                                 2.52 kB        91.8 kB
+├ ● /data-protection                                           2.58 kB        91.9 kB
+├ ○ /donate-trees                                              741 B            90 kB
+├ ○ /explore                                                   4.08 kB        93.4 kB
+├ ● /faq                                                       2.59 kB        91.9 kB
+├ ○ /gift-trees                                                2.52 kB        91.8 kB
+├ ○ /imprint                                                   579 B          89.9 kB
+├ ○ /leaderboard                                               2.61 kB        91.9 kB
+├ ○ /leaderboard/company                                       2.6 kB         91.9 kB
+├ ○ /leaderboard/country                                       2.59 kB        91.9 kB
+├ ○ /leaderboard/country/[country]                             2.61 kB        91.9 kB
+├ ○ /leaderboard/education                                     2.6 kB         91.9 kB
+├ ○ /leaderboard/individual                                    2.6 kB         91.9 kB
+├ ○ /leaderboard/organization                                  2.6 kB         91.9 kB
+├ ○ /login                                                     2.58 kB        91.9 kB
+├ ○ /redeem                                                    2.53 kB        91.8 kB
+├ ○ /register-trees                                            2.53 kB        91.8 kB
+├ ○ /signup                                                    2.54 kB        91.8 kB
+└ ○ /target                                                    2.53 kB        91.8 kB
++ First Load JS shared by all                                  89.3 kB
+  ├ static/pages/_app.js                                       4.13 kB
+  ├ chunks/02fdd446b9d24b530653f3e5f8fffa54c17d2749.a3bfbe.js  2.4 kB
+  ├ chunks/2bc6131d12d9941c8d6e88c497f441bc122b01af.ae31bf.js  7.8 kB
+  ├ chunks/e890d61de8015b8d23b3fe7472d4ceca49eaa6f0.d3ed1f.js  11.3 kB
+  ├ chunks/fc776bd488859104121a5e360ac54a36ab89a8b0.f1729d.js  16.5 kB
+  ├ chunks/framework.0f140d.js                                 40 kB
+  ├ runtime/main.e63b67.js                                     6.45 kB
+  └ runtime/webpack.b65cab.js                                  746 B
+
+λ  (Server)  server-side renders at runtime (uses getInitialProps or getServerSideProps)
+○  (Static)  automatically rendered as static HTML (uses no initial props)
+●  (SSG)     automatically generated as static HTML + JSON (uses getStaticProps)
+```
+
 ## Further Steps
 
 If I had the time, I would:
