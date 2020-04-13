@@ -1,0 +1,886 @@
+openapi: "3.0.2"
+info:
+  version: "1.0.0"
+  title: Trillion Trees Campaign
+  license:
+    name: MIT
+servers:
+  - url: https://staging.trilliontreecampaign.org/public/v1.1
+  - url: https://fixtures.trilliontreecampaign.org/public/v1.1
+paths:
+  /{locale}/menu:
+    get:
+      summary: Get public menu
+      operationId: getMenu
+      parameters:
+        - $ref: "#/components/parameters/locale"
+      responses:
+        "200":
+          description: Public menu
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Menu"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+  /{locale}/pledgeEvents:
+    get:
+      summary: Get pledge events
+      operationId: getPledgeEvents
+      parameters:
+        - $ref: "#/components/parameters/locale"
+      responses:
+        "200":
+          description: Pledge events
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PledgeEvents"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+  /{locale}/api/pledgeEvent/{eventSlug}:
+    get:
+      summary: Get pledge event with auth including non-public
+      operationId: getPledgeEventAuthed
+      parameters:
+        - $ref: "#/components/parameters/locale"
+        - name: eventSlug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Pledge events
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PledgeEvent"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+  /{locale}/pledgeEvent/{eventSlug}:
+    get:
+      summary: Get public pledge event
+      operationId: getPledgeEvent
+      parameters:
+        - $ref: "#/components/parameters/locale"
+        - name: eventSlug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Pledge events
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PledgeEvent"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+  # /{locale}/api/eventPledge/byToken/{pledgeTokens}
+  # /{locale}/api/pledgeEvent/{eventSlug}
+  # /{locale}/api/pledgeEvent/{pledgeEventSlug}/eventPledge POST authed
+  # /{locale}/api/pledgeEvent/{pledgeEventSlug}/eventPledge POST authed
+
+  /{locale}/treecounter:
+    get:
+      summary: Get personalized Tree Counter stats
+      operationId: getMyTreecounter
+      parameters:
+        - $ref: "#/components/parameters/locale"
+      responses:
+        "200":
+          description: Personalized Tree Counter stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TreeCounter"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+  /{locale}/treecounter/{treecounterId}:
+    get:
+      summary: Get Tree Counter stats for an organization or individual
+      operationId: getOrgTreecounter
+      parameters:
+        - $ref: "#/components/parameters/locale"
+        - name: treecounterId
+          in: path
+          required: true
+          description: Organization or individual id
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Tree Counter stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TreeCounter"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+
+  # /{locale}/currencies
+  # /{locale}/config
+  /{locale}/plantProjects:
+    get:
+      summary: Get list of Tree Planting Projects
+      operationId: listPlantProjects
+      parameters:
+        - $ref: "#/components/parameters/locale"
+        - name: loadAll
+          description: "TODO doesn't seem to change anything"
+          in: query
+          schema:
+            type: string
+            enum: [true, false]
+        - name: limit
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: "Paginated list of Plant Projects"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlantProjectPager"
+
+  /{locale}/plantProjects/featured:
+    get:
+      summary: Get list of featured Tree Planting Projects
+      operationId: getFeatured
+      parameters:
+        - $ref: "#/components/parameters/locale"
+        # limit? default 10
+      responses:
+        "200":
+          description: "Paginated list of Plant Projects"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlantProjectPager"
+
+  /{locale}/plantProject/{id}:
+    get:
+      summary: Get full detail for a Tree Planting Project
+      operationId: getProject
+      parameters:
+        - $ref: "#/components/parameters/locale"
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: "Plant Project full detail"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlantProject"
+
+  /{locale}/exploreQuery/{section}:
+    get:
+      summary: Get contribution leaderboard data by section
+      operationId: getLeaderboard
+      parameters:
+        - $ref: "#/components/parameters/locale"
+        - name: section
+          in: path
+          required: true
+          description: Section of leaderboard
+          schema:
+            type: string
+            enum: [country, organization, education, company, individual]
+      responses:
+        "200":
+          description: Leaderboard data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/LeaderboardEntry"
+
+  /{locale}/exploreQuery/{section}/{subsection}:
+    get:
+      summary: Get contribution leaderboard data by sub-section
+      operationId: getLeaderboardBySubsection
+      parameters:
+        - $ref: "#/components/parameters/locale"
+        - name: section
+          in: path
+          required: true
+          description: Section of leaderboard
+          schema:
+            type: string
+            enum: [country, organization, education, company, individual]
+        - name: subsection
+          in: path
+          required: false
+          description: "Subsection: country code, company etc."
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Leaderboard data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  self:
+                    $ref: "#/components/schemas/LeaderboardBreadcrumb"
+                  parent:
+                    $ref: "#/components/schemas/LeaderboardBreadcrumb"
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/LeaderboardEntry"
+  /{locale}/privacy:
+    get:
+      description: Privacy and data protection copy
+      operationId: getPrivacy
+      parameters:
+        - $ref: "#/components/parameters/locale"
+      responses:
+        "200":
+          $ref: "#/components/responses/OkJson"
+  /{locale}/imprint:
+    get:
+      description: Impressum copy
+      operationId: getImprint
+      parameters:
+        - $ref: "#/components/parameters/locale"
+      responses:
+        "200":
+          $ref: "#/components/responses/OkJson"
+
+  # /donate:
+  #   post:
+  #     summary: Donate trees POST handler
+  #     operationId: postDonate
+  #     parameters:
+  #       - plantProject:
+  #         type: string
+  #         required: true
+  #     responses:
+  #       "200":
+  #         description: Fake donate trees response
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: "#/components/schemas/TreeCounter"
+  #       default:
+  #         description: Unexpected error
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: "#/components/schemas/ApiError"
+  #   post:
+  #     summary: Create a pet
+  #     operationId: createPets
+  #     tags:
+  #       - pets
+  #     responses:
+  #       "201":
+  #         description: Null response
+  #       default:
+  #         description: unexpected error
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: "#/components/schemas/ApiError"
+  # /pets/{petId}:
+  #   get:
+  #     summary: Info for a specific pet
+  #     operationId: showPetById
+  #     tags:
+  #       - pets
+  #     parameters:
+  #       - name: petId
+  #         in: path
+  #         required: true
+  #         description: The id of the pet to retrieve
+  #         schema:
+  #           type: string
+  #     responses:
+  #       "200":
+  #         description: Expected response to a valid request
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: "#/components/schemas/Pet"
+  #       default:
+  #         description: unexpected error
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: "#/components/schemas/ApiError"
+components:
+  schemas:
+    LeaderboardEntry:
+      type: object
+      required:
+        - planted
+        - target
+        - caption
+        - uri
+      properties:
+        planted:
+          type: integer
+        target:
+          type: integer
+        caption:
+          type: string
+        uri:
+          type: string
+        # These are in all except country
+        contributorType:
+          type: string
+          enum: [organization, company, individual]
+        treecounterId:
+          type: integer
+        contributorSlug:
+          type: string
+        contributorAvatar:
+          type: string
+        mayPublish:
+          type: boolean
+    Menu:
+      type: array
+      items:
+        $ref: "#/components/schemas/MenuSection"
+    MenuSection:
+      type: object
+      required:
+        - enabled
+        - sequence
+        - caption
+        - help
+        - icon
+        - menuItems
+      properties:
+        enabled:
+          type: integer
+          format: int32
+        sequence:
+          type: integer
+          format: int32
+        caption:
+          type: string
+        help:
+          type: string
+        icon:
+          type: string
+        menuItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/MenuItem"
+    MenuItem:
+      type: object
+      required:
+        - enabled
+        - sequence
+        - caption
+        - help
+        - icon
+        - uri
+      properties:
+        enabled:
+          type: integer
+          format: int32
+        sequence:
+          type: integer
+          format: int32
+        caption:
+          type: string
+        help:
+          type: string
+        icon:
+          type: string
+        uri:
+          type: string
+    PledgeEvents:
+      type: array
+      items:
+        $ref: "#/components/schemas/PledgeEvent"
+    PledgeEvent:
+      type: object
+      required:
+        - slug
+        - name
+        - description
+        - total
+        - image
+        - position
+      properties:
+        slug:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        total:
+          type: integer
+        image:
+          type: string
+        position:
+          type: integer
+        # eventDate:
+        # emailText
+        # language
+    TreeCounter:
+      type: object
+      properties:
+        id:
+          type: string
+        displayName:
+          type: string
+        slug:
+          type: string
+        countPlanted:
+          type: integer
+        countPersonal:
+          type: integer
+        countDonated:
+          type: integer
+        countRegistered:
+          type: integer
+        countReceived:
+          type: integer
+        countTarget:
+          type: integer
+        implicitTarget:
+          type: integer
+        targetYear:
+          type: integer
+        followerIds:
+          type: string
+        # directChildren: []
+        userProfile:
+          $ref: "#/components/schemas/UserProfile"
+        countCommunity:
+          type: integer
+        contributions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Contribution"
+
+        gifts:
+          type: array
+          items:
+            $ref: "#/components/schemas/Gift"
+        countProjectDonated:
+          type: integer
+
+    UserProfile:
+      type: object
+      properties:
+        id:
+          type: integer
+        fullname:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        image:
+          type: string
+        synopsis1:
+          type: string
+        synopsis2:
+          type: string
+        linkText:
+          type: string
+        url:
+          type: string
+    PlantProjectSummary:
+      description: "PlantProject summary display for paginated results"
+      type: object
+      required:
+        - id
+        - name
+        - countTarget
+        - survivalRate
+        - treeCost
+        - currency
+        - url
+        - tpoSlug
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        countTarget:
+          type: integer
+        survivalRate:
+          type: number
+        treeCost:
+          type: number
+        currency:
+          type: string
+        country:
+          type: string
+        url:
+          type: string
+        tpoSlug:
+          type: string
+        tpoName:
+          type: string
+        taxDeductibleCountries:
+          type: array
+          items:
+            type: string
+        hasTaxDeduction:
+          type: boolean
+        slug:
+          type: string
+        reviewScore:
+          type: integer
+        countPlanted:
+          type: integer
+        image:
+          type: string
+        survivalRateStatus:
+          type: string
+        isFeatured:
+          type: boolean
+        allowDonations:
+          type: boolean
+    PlantProjectPager:
+      description: "Paginated list of PlantProjects"
+      type: object
+      properties:
+        merge:
+          type: object
+          properties:
+            plantProjectPager:
+              type: object
+              properties:
+                id:
+                  type: integer
+                category:
+                  type: string
+                currentPage:
+                  type: integer
+                maxPerPage:
+                  type: integer
+                nbPages:
+                  type: integer
+                nbResults:
+                  type: integer
+                nbShowing:
+                  type: integer
+                nbRemaining:
+                  type: integer
+                nbNextResults:
+                  type: integer
+                entities:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/PlantProjectSummary"
+    PlantProject:
+      allOf:
+        # extends PlantProjectSummary
+        - $ref: "#/components/schemas/PlantProjectSummary"
+        - type: object
+          description: Tree Planting Project
+          properties:
+            location:
+              type: string
+            geoLocation:
+              type: string
+            description:
+              type: string
+            linkText:
+              type: string
+            plantProjectImages:
+              type: array
+              items:
+                $ref: "#/components/schemas/PlantProjectImage"
+            plantProjectSites:
+              type: array
+              items:
+                type: string
+            videoUrl:
+              type: string
+            tpoId:
+              type: integer
+            tpoData:
+              type: object
+              properties:
+                id:
+                  type: integer
+                name:
+                  type: string
+                avatar:
+                  type: string
+                treecounterSlug:
+                  type: string
+                address:
+                  type: object
+                  properties:
+                    address:
+                      type: string
+                    zipCode:
+                      type: string
+                    city:
+                      type: string
+                    countryCode:
+                      type: string
+                email:
+                  type: string
+            imageFile:
+              type: string
+            paymentSetup:
+              type: object
+              # Allow "any" for now
+              # additionalProperties: true
+              # taxDeduction: []
+              # defaultCountryKey: default
+              # stripePublishableKey: pk_test_0ahH0yMukgNzOEd0UppzUfsc
+              # treeCountOptions:
+              #   fixedTreeCountOptions:
+              #     - 10
+              #     - 50
+              #   fixedDefaultTreeCount: 50
+              #   variableDefaultTreeCount: 150
+              # accounts:
+              #   acct_16LwVYGCmhOdg3QH:
+              #     type: stripe
+              #     authorization:
+              #       accountId: acct_16LwVYGCmhOdg3QH
+              #     mode: sandbox
+              # countries:
+              #   default:
+              #     isDefault: true
+              #     taxDeductable: false
+              #     paymentMethods:
+              #       stripe_cc: acct_16LwVYGCmhOdg3QH
+            treeCountOptions:
+              type: object
+              properties:
+                default:
+                  type: integer
+                option1:
+                  type: integer
+                option2:
+                  type: integer
+                option3:
+                  type: integer
+                option4:
+                  type: integer
+            reviews:
+              type: array
+              items:
+                # TODO
+                type: object
+                additionalProperties: true
+            position:
+              type: integer
+            synopsis1:
+              type: string
+            synopsis2:
+              type: string
+            countRegistered:
+              type: integer
+            countDonated:
+              type: integer
+            geoLongitude:
+              type: number
+            geoLatitude:
+              type: number
+            isVerified:
+              type: boolean
+            isPublished:
+              type: boolean
+            isCertified:
+              type: boolean
+            isActive:
+              type: boolean
+            created:
+              type: string
+              description: "ISO8601 date time"
+              example: "2020-03-26T16:37:38+00:00"
+
+    PlantProjectImage:
+      type: object
+      required:
+        - id
+        - image
+      properties:
+        id:
+          type: integer
+        image:
+          type: string
+        description:
+          type: string
+
+    # TpoData
+    # PaymentSetup
+    Contribution:
+      type: object
+      required:
+        - id
+        - contributionType
+        - cardType
+        - treeCount
+        - plantDate
+        - geoLongitude
+        - geoLatitude
+        - country
+        - contributionImages
+        - contributionMeasurements
+        - treeType
+        - treeSpecies
+        - treeClassification
+        - treeScientificName
+        - mayUpdate
+        - isGift
+        - isPending
+        - registrationDate
+        - givee
+        - giveeSlug
+        - ndviUid
+      properties:
+        id:
+          type: integer
+        contributionType:
+          type: string
+        cardType:
+          type: string
+        treeCount:
+          type: integer
+        plantDate:
+          type: string
+          example:
+            - "2011-07-01"
+        geoLongitude:
+          type: number
+          example:
+            - -72.416667
+        geoLatitude:
+          type: number
+          example:
+            - 18.999999
+        country:
+          type: string
+          title: Country Code
+          example:
+            - HT
+        contributionImages:
+          type: array
+          items:
+            type: string
+        #contributionMeasurements:
+        #  type: array
+        treeType:
+          type: string
+        treeSpecies:
+          type: string
+        treeClassification:
+          type: string
+        treeScientificName:
+          type: string
+        mayUpdate:
+          type: boolean
+        isGift:
+          type: boolean
+        isPending:
+          type: boolean
+        context:
+          title: The Context Schema
+        registrationDate:
+          type: string
+          example:
+            - "2015-05-20"
+        givee:
+          type: string
+        giveeSlug:
+          type: string
+        ndviUid:
+          type: string
+        geometry:
+          type: string
+          title: The Geometry Schema
+    Gift:
+      type: object
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+          example:
+            - "donation-direct"
+        cardType:
+          type: string
+          example:
+            - gift
+        treeCount:
+          type: integer
+        redemptionDate:
+          type: string
+          example:
+            - "2019-08-04 12:46:31"
+        geoLongitude:
+          type: number
+        geoLatitude:
+          type: number
+        country:
+          type: string
+        treeType:
+          type: string
+        isPending:
+          type: boolean
+        treeSpecies:
+          type: string
+    LeaderboardBreadcrumb:
+      type: object
+      required:
+        - uri
+        - caption
+      properties:
+        caption:
+          type: string
+        uri:
+          type: string
+    ApiError:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+  parameters:
+    # '#/components/parameters/locale'
+    locale:
+      name: locale
+      in: path
+      required: true
+      description: Language code
+      schema:
+        type: string
+        enum: [de, en]
+  responses:
+    # $ref: '#/components/responses/UnexpectedError'
+    UnexpectedError:
+      description: Unexpected Error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiError"
+    OkJson:
+      description: 200 OK JSON response
+      content:
+        application/json:
+          schema:
+            type: object
