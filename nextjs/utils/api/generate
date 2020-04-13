@@ -1,0 +1,3 @@
+trash client/*
+openapi-generator generate -g typescript-fetch -i ./trillion-trees.yaml -o ./client/ -c ./openapi-generator-config.yml
+
