@@ -1,10 +1,13 @@
 # Repot Trillion Trees
 
-The Plant for the Planet / Trillion Trees team have been discussing how to rebuild the [current app](https://github.com/plant-for-the-Planet-org/treecounter-app/) with a new architecture. Development has been tricky and slow due to the app complexity, and with newer methodologies I'm sure things can move faster and result in more robust, satisfying code.
+The [Plant for the Planet](https://plant-for-the-planet.org) / [Trillion Trees](https://www.trilliontreecampaign.org/) team have been discussing how to rebuild the [current app](https://github.com/plant-for-the-Planet-org/treecounter-app/) with a new architecture. Development has been tricky and slow due to the app complexity, and with newer methodologies I'm sure things can move faster and result in more robust, satisfying code.
 
 **This repository is a quick sketch using some new tech in order to try some things out and discover what works and what might be annoying and how to solve it.**
 
 It isn't meant to be clean, it is meant to find and solve problems quickly. It's an experiment.
+
+Current application:
+https://github.com/plant-for-the-Planet-org/treecounter-app/
 
 I worked a bit on the app in 2019, so I have a pretty good understanding how things are currently done and what all the essential features are.
 
